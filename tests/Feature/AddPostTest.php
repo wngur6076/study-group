@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Tag;
 use Tests\TestCase;
 use App\Models\Post;
 use App\Models\User;
@@ -78,6 +79,62 @@ class AddPostTest extends TestCase
     }
 
     /** @test */
+    function user_can_add_tags_to_their_posts()
+    {
+        $this->withoutExceptionHandling();
+        $this->actingAs(User::factory()->create(), 'api');
+
+        $response = $this->post('/api/posts', $this->validParams([
+            'tags' => ['안녕', '김주혁'],
+        ]));
+
+        $post = Post::first();
+
+        $this->assertCount(2, Tag::all());
+        $this->assertEquals('안녕', $post->tags->first()->name);
+        $this->assertEquals('김주혁', $post->tags->last()->name);
+        $response->assertStatus(201)
+            ->assertJson([
+                'data' => [
+                    'attributes' => [
+                        'tags' => [
+                            'data' => [
+                                [
+                                    'data' => [
+                                        'type' => 'tags',
+                                        'tag_id' => 1,
+                                        'attributes' => [
+                                            'name' => '안녕',
+                                        ]
+                                    ],
+                                    'links' => [
+                                        'self' => url('/tags/1'),
+                                    ]
+                                ],
+                                [
+                                    'data' => [
+                                        'type' => 'tags',
+                                        'tag_id' => 2,
+                                        'attributes' => [
+                                            'name' => '김주혁',
+                                        ]
+                                    ],
+                                    'links' => [
+                                        'self' => url('/tags/2'),
+                                    ]
+                                ]
+                            ],
+                            'tag_count' => 2,
+                            'links' => [
+                                'self' => url('/tags'),
+                            ]
+                        ]
+                    ]
+                ],
+            ]);
+    }
+
+    /** @test */
     function title_is_required()
     {
         $response = $this->actingAs(User::factory()->create(), 'api')
@@ -147,5 +204,28 @@ class AddPostTest extends TestCase
 
         $responseString = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('max_number_people', $responseString['errors']);
+    }
+
+    /** @test */
+    function tags_is_optional()
+    {
+        $response = $this->actingAs(User::factory()->create(), 'api')
+            ->json('post', '/api/posts', $this->validParams([
+                'tags' => null,
+            ]));
+
+        $response->assertStatus(201);
+    }
+
+    /** @test */
+    function tags_is_array()
+    {
+        $response = $this->actingAs(User::factory()->create(), 'api')
+            ->json('post', '/api/posts', $this->validParams([
+                'tags' => '테스트',
+            ]));
+
+        $responseString = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey('tags', $responseString['errors']);
     }
 }

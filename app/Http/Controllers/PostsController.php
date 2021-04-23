@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\User as UserResource;
 use Illuminate\Http\Request;
+use App\Http\Resources\TagCollection;
+use App\Http\Resources\User as UserResource;
 
 class PostsController extends Controller
 {
@@ -15,6 +16,7 @@ class PostsController extends Controller
             'zone' => ['required'],
             'deadline' => ['required'],
             'max_number_people' => ['required', 'numeric'],
+            'tags' => ['nullable', 'array'],
         ]);
 
         $post = request()->user()->posts()->create([
@@ -25,12 +27,19 @@ class PostsController extends Controller
             'max_number_people' => request('max_number_people'),
         ]);
 
+        if (request('tags')) {
+            foreach (request('tags') as $tag) {
+                $post->tags()->create(['name' => $tag]);
+            }
+        }
+
         return response()->json([
             'data' => [
                 'type' => 'posts',
                 'post_id' => $post->id,
                 'attributes' => [
                     'posted_by' => new UserResource($post->user),
+                    'tags' => new TagCollection($post->tags),
                     'title' => $post->title,
                     'body' => $post->body,
                     'zone' => $post->zone,
