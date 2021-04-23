@@ -10,11 +10,11 @@ class PostsController extends Controller
     public function store()
     {
         $this->validate(request(), [
-            'title' => '',
-            'body' => '',
-            'zone' => '',
-            'deadline' => '',
-            'max_number_people' => '',
+            'title' => ['required'],
+            'body' => ['required'],
+            'zone' => ['required'],
+            'deadline' => ['required'],
+            'max_number_people' => ['required', 'numeric'],
         ]);
 
         $post = request()->user()->posts()->create([

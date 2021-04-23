@@ -25,6 +25,11 @@ Route::prefix('/auth')->group(function () {
     });
 });
 
-Route::apiResources([
-    '/posts' => PostsController::class,
-]);
+Route::middleware('auth:api')->group(function() {
+    Route::get('logout', [AuthController::class, 'logout']);
+    Route::get('user', [AuthController::class, 'user']);
+
+    Route::apiResources([
+        '/posts' => PostsController::class,
+    ]);
+});
