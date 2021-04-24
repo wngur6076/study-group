@@ -23,11 +23,6 @@ class AddPostTest extends TestCase
         ], $overrides);
     }
 
-    private function assertValidationError($response, $field)
-    {
-        $response->assertStatus(422)->assertJsonStructure(['errors' => [$field]]);
-    }
-
     /** @test */
     function adding_a_valid_post()
     {

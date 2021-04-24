@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\PostsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PostsController;
+use App\Http\Controllers\StudyRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +30,7 @@ Route::middleware('auth:api')->group(function() {
     Route::get('logout', [AuthController::class, 'logout']);
     Route::get('user', [AuthController::class, 'user']);
 
+    Route::post('/study-request', [StudyRequestController::class, 'store']);
     Route::apiResources([
         '/posts' => PostsController::class,
     ]);
