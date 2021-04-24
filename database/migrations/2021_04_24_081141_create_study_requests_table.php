@@ -17,8 +17,8 @@ class CreateStudyRequestsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('post_id');
             $table->unsignedBigInteger('user_id');
-            $table->string('reason');
-            $table->string('project');
+            $table->string('reason')->nullable();
+            $table->string('project')->nullable();
             $table->tinyInteger('status')->nullable();
             $table->timestamp('confirmed_at')->nullable();
             $table->timestamps();
