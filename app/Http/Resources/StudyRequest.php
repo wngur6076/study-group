@@ -16,7 +16,7 @@ class StudyRequest extends JsonResource
                 'study_request_id' => $this->id,
                 'attributes' => [
                     'study_requested_by' => new UserResource(User::findOrFail($this->user_id)),
-                    'confirmed_at' => $this->confirmed_at,
+                    'confirmed_at' => optional($this->confirmed_at)->diffForHumans(),
                     'status' => $this->status,
                     'reason' => $this->reason,
                     'project' => $this->project,

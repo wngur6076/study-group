@@ -103,6 +103,6 @@ class ViewStudyRequestTest extends TestCase
             'project' => 'TEST 1',
         ]);
         $this->get("/api/study-groups/{$post->id}/request")
-            ->assertStatus(404);
+            ->assertStatus(403);
     }
 }
