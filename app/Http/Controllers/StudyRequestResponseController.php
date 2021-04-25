@@ -25,4 +25,18 @@ class StudyRequestResponseController extends Controller
 
         return new StudyRequestResource($studyRequest);
     }
+
+    public function destroy($id)
+    {
+        $this->validate(request(), [
+            'user_id' => ['required'],
+        ]);
+
+        StudyRequest::where('post_id', $id)
+            ->where('user_id', request('user_id'))
+            ->firstOrFail()
+            ->delete();
+
+        return response([], 204);
+    }
 }

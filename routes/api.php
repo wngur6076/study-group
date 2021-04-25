@@ -32,6 +32,7 @@ Route::middleware('auth:api')->group(function() {
     Route::get('/study-groups/{id}/request', [StudyRequestController::class, 'index'])->middleware('isSelf');
 
     Route::post('/study-groups/{id}/request-response', [StudyRequestResponseController::class, 'store'])->middleware('isSelf');
+    Route::delete('/study-groups/{id}/request-response', [StudyRequestResponseController::class, 'destroy'])->middleware('isRequestorOrSelf');
 
     Route::apiResources([
         '/posts' => PostsController::class,
