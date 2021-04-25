@@ -15,6 +15,7 @@ class StudyRequestTest extends TestCase
     private function validParams($overrides = [])
     {
         return array_merge([
+            'post_id' => Post::factory()->create()->id,
             'reason' => '테스트',
             'project' => 'test',
         ], $overrides);
@@ -76,8 +77,8 @@ class StudyRequestTest extends TestCase
     {
         $this->actingAs(User::factory()->create(), 'api');
 
-        $response = $this->post("/api/study-groups/123/request", $this->validParams([
-        ]))->assertStatus(404);
+        $response = $this->post("/api/study-groups/123/request", $this->validParams())
+            ->assertStatus(404);
 
         $this->assertNull(StudyRequest::first());
         $response->assertJson([
@@ -95,9 +96,8 @@ class StudyRequestTest extends TestCase
         $this->actingAs(User::factory()->create(), 'api');
         $post = Post::factory()->create(['deadline' => now()->subDay()]);
 
-        $response = $this->post("/api/study-groups/{$post->id}/request", $this->validParams([
-            'post_id' => $post->id,
-        ]))->assertStatus(404);
+        $response = $this->post("/api/study-groups/{$post->id}/request", $this->validParams())
+            ->assertStatus(404);
 
         $this->assertNull(StudyRequest::first());
         $response->assertJson([
@@ -122,9 +122,8 @@ class StudyRequestTest extends TestCase
             'status' => 1,
         ]);
 
-        $response = $this->post("/api/study-groups/{$post->id}/request", $this->validParams([
-            'post_id' => $post->id,
-        ]))->assertStatus(422);
+        $response = $this->post("/api/study-groups/{$post->id}/request", $this->validParams())
+            ->assertStatus(422);
 
         $response->assertJson([
             'errors' => [

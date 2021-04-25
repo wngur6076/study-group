@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\StudyRequestController;
-use App\Http\Controllers\PostStudyRequestsController;
+use App\Http\Controllers\StudyRequestResponseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +29,10 @@ Route::prefix('/auth')->group(function () {
 
 Route::middleware('auth:api')->group(function() {
     Route::post('/study-groups/{id}/request', [StudyRequestController::class, 'store']);
-    Route::get('/study-groups/{id}/request', [StudyRequestController::class, 'index']);
+    Route::get('/study-groups/{id}/request', [StudyRequestController::class, 'index'])->middleware('isSelf');
+
+    Route::post('/study-groups/{id}/request-response', [StudyRequestResponseController::class, 'store'])->middleware('isSelf');
+
     Route::apiResources([
         '/posts' => PostsController::class,
     ]);

@@ -14,11 +14,6 @@ class StudyRequestController extends Controller
 {
     public function index($id)
     {
-        try {
-            Post::where('id', $id)->where('user_id', auth()->user()->id)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            throw new PostNotFoundException();
-        }
         $studyRequests = StudyRequest::where('post_id', $id)->get();
 
         return new StudyRequestCollection($studyRequests);

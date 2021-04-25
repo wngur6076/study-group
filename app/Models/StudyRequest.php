@@ -11,4 +11,6 @@ class StudyRequest extends Model
 
     protected $guarded = [];
 
+    protected $dates = ['confirmed_at'];
+
 }

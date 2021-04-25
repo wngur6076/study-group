@@ -26,7 +26,8 @@ class Post extends Model
 
     public function studyRequest()
     {
-        return $this->belongsToMany(User::class, 'study_requests');
+        return $this->belongsToMany(User::class, 'study_requests')
+            ->withTimestamps();
     }
 
     public function numberOfPeopleCheck($studyRequestCount)
