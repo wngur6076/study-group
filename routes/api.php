@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\StudyRequestController;
+use App\Http\Controllers\PostStudyRequestsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,15 +23,13 @@ Route::prefix('/auth')->group(function () {
 
     Route::middleware('auth:api')->group(function() {
         Route::get('logout', [AuthController::class, 'logout']);
-        Route::get('user', [AuthController::class, 'user']);
+        Route::get('users', [AuthController::class, 'user']);
     });
 });
 
 Route::middleware('auth:api')->group(function() {
-    Route::get('logout', [AuthController::class, 'logout']);
-    Route::get('user', [AuthController::class, 'user']);
-
-    Route::post('/study-request', [StudyRequestController::class, 'store']);
+    Route::post('/study-groups/{id}/request', [StudyRequestController::class, 'store']);
+    Route::get('/study-groups/{id}/request', [StudyRequestController::class, 'index']);
     Route::apiResources([
         '/posts' => PostsController::class,
     ]);

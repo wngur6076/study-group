@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Http\Resources\TagCollection;
-use App\Http\Resources\User as UserResource;
+use App\Http\Resources\Post as PostResource;
+
 
 class PostsController extends Controller
 {
@@ -33,23 +32,6 @@ class PostsController extends Controller
             }
         }
 
-        return response()->json([
-            'data' => [
-                'type' => 'posts',
-                'post_id' => $post->id,
-                'attributes' => [
-                    'posted_by' => new UserResource($post->user),
-                    'tags' => new TagCollection($post->tags),
-                    'title' => $post->title,
-                    'body' => $post->body,
-                    'zone' => $post->zone,
-                    'deadline' => $post->deadline->format('Y-m-d H:i'),
-                    'max_number_people' => $post->max_number_people,
-                ]
-            ],
-            'links' => [
-                'self' => url('/posts/'.$post->id),
-            ]
-        ], 201);
+        return new PostResource($post);
     }
 }

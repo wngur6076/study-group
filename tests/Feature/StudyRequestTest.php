@@ -15,7 +15,6 @@ class StudyRequestTest extends TestCase
     private function validParams($overrides = [])
     {
         return array_merge([
-            'post_id' => Post::factory()->create()->id,
             'reason' => '테스트',
             'project' => 'test',
         ], $overrides);
@@ -29,8 +28,7 @@ class StudyRequestTest extends TestCase
         $this->actingAs($user = User::factory()->create(['id' => 123]), 'api');
         $post = Post::factory()->create();
 
-        $response = $this->post('/api/study-request', [
-            'post_id' => $post->id,
+        $response = $this->post("/api/study-groups/{$post->id}/request", [
             'reason' => '테스트',
             'project' => 'test',
         ])->assertStatus(200);
@@ -51,7 +49,7 @@ class StudyRequestTest extends TestCase
                 ]
             ],
             'links' => [
-                'self' => url('/posts/'.$post->id),
+                'self' => url('/users/'.$studyRequest->user_id),
             ]
         ]);
     }
@@ -64,12 +62,10 @@ class StudyRequestTest extends TestCase
         $this->actingAs(User::factory()->create(), 'api');
         $post = Post::factory()->create();
 
-        $this->post('/api/study-request', $this->validParams([
-            'post_id' => $post->id,
-        ]))->assertStatus(200);
-        $this->post('/api/study-request', $this->validParams([
-            'post_id' => $post->id,
-        ]))->assertStatus(200);
+        $this->post("/api/study-groups/{$post->id}/request", $this->validParams())
+            ->assertStatus(200);
+        $this->post("/api/study-groups/{$post->id}/request", $this->validParams())
+            ->assertStatus(200);
 
         $studyRequest = StudyRequest::all();
         $this->assertCount(1, $studyRequest);
@@ -80,8 +76,7 @@ class StudyRequestTest extends TestCase
     {
         $this->actingAs(User::factory()->create(), 'api');
 
-        $response = $this->post('/api/study-request', $this->validParams([
-            'post_id' => 123,
+        $response = $this->post("/api/study-groups/123/request", $this->validParams([
         ]))->assertStatus(404);
 
         $this->assertNull(StudyRequest::first());
@@ -100,7 +95,7 @@ class StudyRequestTest extends TestCase
         $this->actingAs(User::factory()->create(), 'api');
         $post = Post::factory()->create(['deadline' => now()->subDay()]);
 
-        $response = $this->post('/api/study-request', $this->validParams([
+        $response = $this->post("/api/study-groups/{$post->id}/request", $this->validParams([
             'post_id' => $post->id,
         ]))->assertStatus(404);
 
@@ -127,7 +122,7 @@ class StudyRequestTest extends TestCase
             'status' => 1,
         ]);
 
-        $response = $this->post('/api/study-request', $this->validParams([
+        $response = $this->post("/api/study-groups/{$post->id}/request", $this->validParams([
             'post_id' => $post->id,
         ]))->assertStatus(422);
 
@@ -141,22 +136,12 @@ class StudyRequestTest extends TestCase
     }
 
     /** @test */
-    function post_id_is_required()
-    {
-        $response = $this->actingAs(User::factory()->create(), 'api')
-            ->json('post', '/api/study-request', $this->validParams([
-                'post_id' => '',
-            ]));
-
-        $responseString = json_decode($response->getContent(), true);
-        $this->assertArrayHasKey('post_id', $responseString['errors']);
-    }
-
-    /** @test */
     function reason_is_optional()
     {
+        $post = Post::factory()->create();
+
         $response = $this->actingAs(User::factory()->create(), 'api')
-            ->json('post', '/api/study-request', $this->validParams([
+            ->json('post', "/api/study-groups/{$post->id}/request", $this->validParams([
                 'reason' => null,
             ]));
 
@@ -166,8 +151,10 @@ class StudyRequestTest extends TestCase
     /** @test */
     function project_is_optional()
     {
+        $post = Post::factory()->create();
+
         $response = $this->actingAs(User::factory()->create(), 'api')
-            ->json('post', '/api/study-request', $this->validParams([
+            ->json('post', "/api/study-groups/{$post->id}/request", $this->validParams([
                 'project' => null,
             ]));
 

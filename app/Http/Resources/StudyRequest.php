@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\User;
+use App\Http\Resources\User as UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class StudyRequest extends JsonResource
@@ -13,15 +15,15 @@ class StudyRequest extends JsonResource
                 'type' => 'study-request',
                 'study_request_id' => $this->id,
                 'attributes' => [
+                    'study_requested_by' => new UserResource(User::findOrFail($this->user_id)),
                     'confirmed_at' => $this->confirmed_at,
-                    'post_id' => $this->post_id,
-                    'user_id' => $this->user_id,
+                    'status' => $this->status,
                     'reason' => $this->reason,
                     'project' => $this->project,
                 ]
             ],
             'links' => [
-                'self' => url('/posts/'.$this->post_id),
+                'self' => url('/users/'.$this->user_id),
             ]
         ];
     }

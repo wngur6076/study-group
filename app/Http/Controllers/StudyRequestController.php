@@ -7,20 +7,32 @@ use App\Models\StudyRequest;
 use App\Exceptions\PostNotFoundException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\StudyRequest as StudyRequestReource;
+use App\Http\Resources\StudyRequestCollection;
 use Carbon\Carbon;
 
 class StudyRequestController extends Controller
 {
-    public function store()
+    public function index($id)
+    {
+        try {
+            Post::where('id', $id)->where('user_id', auth()->user()->id)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new PostNotFoundException();
+        }
+        $studyRequests = StudyRequest::where('post_id', $id)->get();
+
+        return new StudyRequestCollection($studyRequests);
+    }
+
+    public function store($id)
     {
         $this->validate(request(), [
-            'post_id' => ['required'],
             'reason' => ['nullable'],
             'project' => ['nullable'],
         ]);
 
         try {
-            $post = Post::where('id', request('post_id'))
+            $post = Post::where('id', $id)
                 ->where('deadline', '>', Carbon::now())->firstOrFail();
             $post->numberOfPeopleCheck($post->requestSignCount());
 
@@ -35,7 +47,7 @@ class StudyRequestController extends Controller
         }
 
         return new StudyRequestReource(
-            StudyRequest::where('post_id', request('post_id'))
+            StudyRequest::where('post_id', $id)
                 ->where('user_id', auth()->user()->id)
                 ->first()
         );
