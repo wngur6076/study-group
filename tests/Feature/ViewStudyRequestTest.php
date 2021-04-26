@@ -89,7 +89,7 @@ class ViewStudyRequestTest extends TestCase
     }
 
     /** @test */
-    function only_your_own_posts_can_see_the_list_of_study_request()
+    function users_can_view_the_study_requestor_s_status_when_requested()
     {
         $this->actingAs($user = User::factory()->create(), 'api');
         $post = Post::factory()->create();

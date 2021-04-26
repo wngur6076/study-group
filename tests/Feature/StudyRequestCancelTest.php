@@ -73,4 +73,29 @@ class StudyRequestCancelTest extends TestCase
         $responseString = json_decode($response->getContent(), true);
         $this->assertArrayHasKey('user_id', $responseString['errors']);
     }
+
+    /** @test */
+    function users_can_view_the_status_of_the_study_requestor_when_canceled()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create();
+        $post = Post::factory()->create(['user_id' => $user->id]);
+
+        $anotherUser = User::factory()->create();
+        StudyRequest::create([
+            'user_id' => $anotherUser->id,
+            'post_id' => $post->id,
+            'confirmed_at' => now(),
+            'status' => 1,
+        ]);
+
+        $this->actingAs($user, 'api')
+            ->delete("/api/study-groups/{$post->id}/request-response", [
+                'user_id' => $anotherUser->id,
+                'status' => 1,
+            ])->assertStatus(204);
+
+        $this->assertEquals(0, $post->requestSignCount());
+
+    }
 }
