@@ -102,4 +102,29 @@ class StudyRequestAcceptTest extends TestCase
         $this->assertArrayHasKey('status', $responseString['errors']);
 
     }
+
+    /** @test */
+    function users_can_view_the_study_requestor_s_status_when_approved()
+    {
+        $this->withoutExceptionHandling();
+        $user = User::factory()->create();
+        $post = Post::factory()->create(['user_id' => $user->id]);
+
+        $anotherUser = User::factory()->create();
+        StudyRequest::create([
+            'user_id' => $anotherUser->id,
+            'post_id' => $post->id,
+            'confirmed_at' => null,
+            'status' => 1,
+        ]);
+
+        $this->actingAs($user, 'api')
+            ->post("/api/study-groups/{$post->id}/request-response", [
+                'user_id' => $anotherUser->id,
+                'status' => 1,
+            ])->assertStatus(200);
+
+        $this->assertEquals(1, $post->requestSignCount());
+
+    }
 }
