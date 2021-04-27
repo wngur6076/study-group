@@ -11,7 +11,7 @@
 
 <p align="center">
     <img width="45%" src="https://user-images.githubusercontent.com/71273875/116206706-0f54da80-a77a-11eb-9547-7c6ba065ed1f.png"> 
-    <img width="45%" height="280" src="https://user-images.githubusercontent.com/71273875/116206728-12e86180-a77a-11eb-800f-95a95f496336.png">                         
+    <img width="45%" src="https://user-images.githubusercontent.com/71273875/116206728-12e86180-a77a-11eb-800f-95a95f496336.png">                         
 </p>   
 
 ## ⚙️ 느낀점
