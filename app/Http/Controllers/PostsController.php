@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Post as PostResource;
+use App\Http\Resources\PostCollection;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 
 class PostsController extends Controller
 {
+    public function index()
+    {
+        $posts = Post::orderBy('id', 'desc')->Paginate(10);
+
+        return new PostCollection($posts);
+    }
+
     public function store()
     {
         $this->validate(request(), [
