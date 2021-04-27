@@ -73,4 +73,12 @@ class PostsController extends Controller
 
         return new PostResource($post);
     }
+
+    public function destroy($id)
+    {
+        $post = Auth::user()->posts()->findOrFail($id);
+        $post->delete();
+
+        return response([], 204);
+    }
 }

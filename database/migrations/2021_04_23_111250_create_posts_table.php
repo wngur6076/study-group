@@ -21,6 +21,7 @@ class CreatePostsTable extends Migration
             $table->string('zone');
             $table->timestamp('deadline');
             $table->integer('max_number_people');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
