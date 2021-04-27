@@ -22,6 +22,8 @@ class Post extends JsonResource
                     'zone' => $this->zone,
                     'deadline' => $this->deadline->format('Y-m-d H:i'),
                     'max_number_people' => $this->max_number_people,
+                    'created_at' => $this->created_at->format('Y-m-d'),
+                    'requestSignCount' => $this->requestSignCount(),
                 ]
             ],
             'links' => [

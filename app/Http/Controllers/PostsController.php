@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Post as PostResource;
-
+use App\Models\Post;
 
 class PostsController extends Controller
 {
@@ -31,6 +31,13 @@ class PostsController extends Controller
                 $post->tags()->create(['name' => $tag]);
             }
         }
+
+        return new PostResource($post);
+    }
+
+    public function show($id)
+    {
+        $post = Post::findOrFail($id);
 
         return new PostResource($post);
     }
