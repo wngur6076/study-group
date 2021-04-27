@@ -97,5 +97,15 @@ class StudyRequestCancelTest extends TestCase
 
         $this->assertEquals(0, $post->requestSignCount());
 
+        $response = $this->get("/api/posts/{$post->id}");
+        $response->assertJson([
+            'data' => [
+                'type' => 'posts',
+                'post_id' => $post->id,
+                'attributes' => [
+                    'requestSignCount' => 0,
+                ]
+            ]
+        ]);
     }
 }

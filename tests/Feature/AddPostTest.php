@@ -56,6 +56,7 @@ class AddPostTest extends TestCase
                         'posted_by' => [
                             'data' => [
                                 'attributes' => [
+                                    'email' => $user->email,
                                     'name' => $user->name,
                                 ]
                             ]
@@ -65,6 +66,7 @@ class AddPostTest extends TestCase
                         'zone' => '부산 남구 서면역',
                         'deadline' => $post->deadline->format('Y-m-d H:i'),
                         'max_number_people' => 5,
+                        'created_at' => $post->created_at->format('Y-m-d'),
                     ]
                 ],
                 'links' => [
