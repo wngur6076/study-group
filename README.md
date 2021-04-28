@@ -1,5 +1,10 @@
 # 스터디 모집
 
+## ⚙️ 참고
+
+* [github 하나로 1인 개발 워크플로우 완성하기: 실전 편](https://www.huskyhoochu.com/issue-based-version-control-201)
+* [[Intellj] Github을 이용한 프로젝트 관리](https://treasurebear.tistory.com/69)
+
 ## ⚙️ 주제
 
 * 깃허브 이슈 관리로 프로젝트 해보려고 간단한 주제 선택
